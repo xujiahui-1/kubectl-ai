@@ -14,7 +14,12 @@ Choose your AI provider:
 export DEEPSEEK_API_KEY=sk-xxx
 ```
 
-**Option B — Anthropic**
+**Option B — OpenAI**
+```bash
+export OPENAI_API_KEY=sk-xxx
+```
+
+**Option C — Anthropic**
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-xxx
 ```
@@ -24,8 +29,11 @@ Then run:
 # Analyze a single failing pod (DeepSeek is default)
 kubectl-ai analyze pod payment-api -n production
 
+# If using OpenAI
+kubectl-ai analyze pod payment-api -n production --ai-provider openai --ai-model gpt-4o
+
 # If using Anthropic
-kubectl-ai analyze pod payment-api -n production --ai-provider anthropic
+kubectl-ai analyze pod payment-api -n production --ai-provider anthropic --ai-model claude-sonnet-4-20250514
 
 # Or scan all failing pods in a namespace
 kubectl-ai analyze all -n production
@@ -75,7 +83,7 @@ kubectl-ai analyze pod xxx
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `--ai-provider` | `deepseek` | AI provider (`deepseek`, `anthropic`, `bedrock`) |
+| `--ai-provider` | `deepseek` | AI provider (`deepseek`, `anthropic`, `openai`, `bedrock`) |
 | `--ai-model` | `deepseek-chat` | Model name |
 | `--ai-api-key` | env var | Defaults to `$DEEPSEEK_API_KEY` |
 | `-n, --namespace` | `default` | Kubernetes namespace |
@@ -84,6 +92,10 @@ kubectl-ai analyze pod xxx
 ### Using Other AI Providers
 
 ```bash
+# OpenAI
+export OPENAI_API_KEY=sk-xxx
+kubectl-ai analyze pod xxx --ai-provider openai --ai-model gpt-4o
+
 # Anthropic
 export ANTHROPIC_API_KEY=sk-ant-xxx
 kubectl-ai analyze pod xxx --ai-provider anthropic --ai-model claude-sonnet-4-20250514

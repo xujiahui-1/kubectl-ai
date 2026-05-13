@@ -13,7 +13,12 @@
 export DEEPSEEK_API_KEY=sk-xxx
 ```
 
-**选项 B — Anthropic**
+**选项 B — OpenAI**
+```bash
+export OPENAI_API_KEY=sk-xxx
+```
+
+**选项 C — Anthropic**
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-xxx
 ```
@@ -23,8 +28,11 @@ export ANTHROPIC_API_KEY=sk-ant-xxx
 # 分析单个故障 Pod（默认用 DeepSeek）
 kubectl-ai analyze pod payment-api -n production
 
+# 如果用 OpenAI
+kubectl-ai analyze pod payment-api -n production --ai-provider openai --ai-model gpt-4o
+
 # 如果用 Anthropic
-kubectl-ai analyze pod payment-api -n production --ai-provider anthropic
+kubectl-ai analyze pod payment-api -n production --ai-provider anthropic --ai-model claude-sonnet-4-20250514
 
 # 或批量扫描整个 namespace
 kubectl-ai analyze all -n production

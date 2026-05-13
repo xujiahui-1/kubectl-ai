@@ -47,9 +47,11 @@ func NewClient(provider, model, apiKey string) (Client, error) {
 		return newAnthropicClient(model, apiKey), nil
 	case "deepseek":
 		return newDeepSeekClient(model, apiKey), nil
+	case "openai":
+		return newOpenAIClient(model, apiKey), nil
 	case "bedrock":
 		return nil, fmt.Errorf("bedrock provider not yet implemented")
 	default:
-		return nil, fmt.Errorf("unknown AI provider: %s, supported: anthropic, deepseek, bedrock", provider)
+		return nil, fmt.Errorf("unknown AI provider: %s, supported: deepseek, anthropic, openai, bedrock", provider)
 	}
 }

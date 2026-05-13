@@ -52,7 +52,7 @@ func init() {
 	analyzeCmd.AddCommand(analyzePodCmd)
 	rootCmd.AddCommand(analyzeCmd)
 
-	analyzeCmd.PersistentFlags().StringVar(&aiProvider, "ai-provider", "deepseek", "AI provider (deepseek, anthropic, bedrock)")
+	analyzeCmd.PersistentFlags().StringVar(&aiProvider, "ai-provider", "deepseek", "AI provider (deepseek, anthropic, openai, bedrock)")
 	analyzeCmd.PersistentFlags().StringVar(&aiModel, "ai-model", "deepseek-chat", "AI model name")
 	analyzeCmd.PersistentFlags().StringVar(&aiAPIKey, "ai-api-key", "", "AI API key (default $DEEPSEEK_API_KEY or $ANTHROPIC_API_KEY)")
 }
