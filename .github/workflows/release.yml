@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build and Release
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        arch: [amd64]
+        include:
+          - os: ubuntu-latest
+            arch: amd64
+            bin_name: kubectl-ai-linux-amd64
+          - os: macos-latest
+            arch: arm64
+            bin_name: kubectl-ai-darwin-arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+
+      - name: Build
+        run: |
+          GOOS=${{ matrix.os == 'ubuntu-latest' && 'linux' || 'darwin' }} \
+          GOARCH=${{ matrix.arch }} \
+          go build -o ${{ matrix.bin_name }} .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.bin_name }}
+          path: ${{ matrix.bin_name }}
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: kubectl-ai-*
+          merge-multiple: true
+
+      - name: Generate checksums
+        run: sha256sum kubectl-ai-* > checksums.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            kubectl-ai-*
+            checksums.txt
+          generate_release_notes: true
