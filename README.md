@@ -7,37 +7,36 @@ Quickly identify pod failure root causes: ImagePullBackOff, CrashLoopBackOff, OO
 
 ## Quick Start
 
-Choose your AI provider:
-
-**Option A — DeepSeek（default）**
 ```bash
-export DEEPSEEK_API_KEY=sk-xxx
-```
+# 1. Interactive setup (provider, API key, model)
+kubectl-ai init
 
-**Option B — OpenAI**
-```bash
-export OPENAI_API_KEY=sk-xxx
-```
-
-**Option C — Anthropic**
-```bash
-export ANTHROPIC_API_KEY=sk-ant-xxx
-```
-
-Then run:
-```bash
-# Analyze a single failing pod (DeepSeek is default)
+# 2. Analyze a failing pod
 kubectl-ai analyze pod payment-api -n production
-
-# If using OpenAI
-kubectl-ai analyze pod payment-api -n production --ai-provider openai --ai-model gpt-4o
-
-# If using Anthropic
-kubectl-ai analyze pod payment-api -n production --ai-provider anthropic --ai-model claude-sonnet-4-20250514
 
 # Or scan all failing pods in a namespace
 kubectl-ai analyze all -n production
 ```
+
+> Skip the interactive setup by setting environment variables and using flags:
+>
+> **DeepSeek（default）**
+> ```bash
+> export DEEPSEEK_API_KEY=sk-xxx
+> kubectl-ai analyze pod payment-api -n production
+> ```
+>
+> **OpenAI**
+> ```bash
+> export OPENAI_API_KEY=sk-xxx
+> kubectl-ai analyze pod payment-api -n production --ai-provider openai --ai-model gpt-4o
+> ```
+>
+> **Anthropic**
+> ```bash
+> export ANTHROPIC_API_KEY=sk-ant-xxx
+> kubectl-ai analyze pod payment-api -n production --ai-provider anthropic --ai-model claude-sonnet-4-20250514
+> ```
 
 ### Installation
 
@@ -81,24 +80,37 @@ kubectl-ai analyze pod xxx
 
 ## Configuration
 
-| Flag | Default | Description |
-|------|---------|-------------|
-| `--ai-provider` | `deepseek` | AI provider (`deepseek`, `anthropic`, `openai`, `bedrock`) |
-| `--ai-model` | `deepseek-chat` | Model name |
-| `--ai-api-key` | env var | Defaults to `$DEEPSEEK_API_KEY` |
-| `-n, --namespace` | `default` | Kubernetes namespace |
-| `--kubeconfig` | `~/.kube/config` | Path to kubeconfig |
+### Interactive Setup (Recommended)
 
-### Using Other AI Providers
+Run `kubectl-ai init` to configure your AI provider, API key, and model interactively.
+Settings are saved to `~/.kubectl-ai/config.json`.
+
+### CLI Flags
+
+| Flag | Description |
+|------|-------------|
+| `--ai-provider` | AI provider (`deepseek`, `anthropic`, `openai`) — uses config file or defaults to `deepseek` |
+| `--ai-model` | Model name — uses config file or provider-specific default |
+| `--ai-api-key` | AI API key — falls back to config file, then environment variable |
+| `-n, --namespace` | Kubernetes namespace (default `default`) |
+| `--kubeconfig` | Path to kubeconfig (default `~/.kube/config`) |
+
+Priority: CLI flag > config file (`~/.kubectl-ai/config.json`) > environment variable > built-in default.
+
+### Manual Setup
 
 ```bash
+# DeepSeek (default)
+export DEEPSEEK_API_KEY=sk-xxx
+kubectl-ai analyze pod xxx -n production
+
 # OpenAI
 export OPENAI_API_KEY=sk-xxx
-kubectl-ai analyze pod xxx --ai-provider openai --ai-model gpt-4o
+kubectl-ai analyze pod xxx -n production --ai-provider openai --ai-model gpt-4o
 
 # Anthropic
 export ANTHROPIC_API_KEY=sk-ant-xxx
-kubectl-ai analyze pod xxx --ai-provider anthropic --ai-model claude-sonnet-4-20250514
+kubectl-ai analyze pod xxx -n production --ai-provider anthropic --ai-model claude-sonnet-4-20250514
 ```
 
 ## Requirements

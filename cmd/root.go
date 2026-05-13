@@ -21,7 +21,7 @@ var rootCmd = &cobra.Command{
 	Short:        "AI-powered Kubernetes incident analyzer",
 	SilenceUsage: true,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		if cmd.Name() == "help" || cmd.Name() == "completion" {
+		if cmd.Name() == "help" || cmd.Name() == "completion" || cmd.Name() == "init" {
 			return nil
 		}
 		cs, err := newClientset()

@@ -6,37 +6,36 @@
 
 ## 快速开始
 
-选择一种 AI 提供商：
-
-**选项 A — DeepSeek（默认）**
 ```bash
-export DEEPSEEK_API_KEY=sk-xxx
-```
+# 1. 交互式初始化（选择 AI 提供商、输入 API Key、选模型）
+kubectl-ai init
 
-**选项 B — OpenAI**
-```bash
-export OPENAI_API_KEY=sk-xxx
-```
-
-**选项 C — Anthropic**
-```bash
-export ANTHROPIC_API_KEY=sk-ant-xxx
-```
-
-然后运行：
-```bash
-# 分析单个故障 Pod（默认用 DeepSeek）
+# 2. 分析故障 Pod
 kubectl-ai analyze pod payment-api -n production
-
-# 如果用 OpenAI
-kubectl-ai analyze pod payment-api -n production --ai-provider openai --ai-model gpt-4o
-
-# 如果用 Anthropic
-kubectl-ai analyze pod payment-api -n production --ai-provider anthropic --ai-model claude-sonnet-4-20250514
 
 # 或批量扫描整个 namespace
 kubectl-ai analyze all -n production
 ```
+
+> 也可以跳过 init，直接使用环境变量：
+>
+> **DeepSeek（默认）**
+> ```bash
+> export DEEPSEEK_API_KEY=sk-xxx
+> kubectl-ai analyze pod payment-api -n production
+> ```
+>
+> **OpenAI**
+> ```bash
+> export OPENAI_API_KEY=sk-xxx
+> kubectl-ai analyze pod payment-api -n production --ai-provider openai --ai-model gpt-4o
+> ```
+>
+> **Anthropic**
+> ```bash
+> export ANTHROPIC_API_KEY=sk-ant-xxx
+> kubectl-ai analyze pod payment-api -n production --ai-provider anthropic --ai-model claude-sonnet-4-20250514
+> ```
 
 ### 安装
 
@@ -80,20 +79,37 @@ kubectl-ai analyze pod xxx
 
 ## 配置
 
-| 参数 | 默认值 | 说明 |
-|------|--------|------|
-| `--ai-provider` | `deepseek` | AI 提供商 (`deepseek`, `anthropic`, `bedrock`) |
-| `--ai-model` | `deepseek-chat` | 模型名称 |
-| `--ai-api-key` | 环境变量 | 默认读取 `$DEEPSEEK_API_KEY` |
-| `-n, --namespace` | `default` | Kubernetes namespace |
-| `--kubeconfig` | `~/.kube/config` | kubeconfig 路径 |
+### 交互式初始化（推荐）
 
-### 使用其他 AI 提供商
+运行 `kubectl-ai init` 交互式选择 AI 提供商、输入 API Key 和选择模型。
+配置保存到 `~/.kubectl-ai/config.json`，后续使用无需再指定参数。
+
+### 命令行参数
+
+| 参数 | 说明 |
+|------|------|
+| `--ai-provider` | AI 提供商 (`deepseek`, `anthropic`, `openai`) — 优先使用配置文件，默认 `deepseek` |
+| `--ai-model` | 模型名称 — 优先使用配置文件，各提供商有各自默认值 |
+| `--ai-api-key` | API Key — 优先级：命令行 > 配置文件 > 环境变量 |
+| `-n, --namespace` | Kubernetes namespace（默认 `default`） |
+| `--kubeconfig` | kubeconfig 路径（默认 `~/.kube/config`） |
+
+优先级：命令行参数 > 配置文件 (`~/.kubectl-ai/config.json`) > 环境变量 > 内置默认值。
+
+### 手动配置
 
 ```bash
+# DeepSeek（默认）
+export DEEPSEEK_API_KEY=sk-xxx
+kubectl-ai analyze pod xxx -n production
+
+# OpenAI
+export OPENAI_API_KEY=sk-xxx
+kubectl-ai analyze pod xxx -n production --ai-provider openai --ai-model gpt-4o
+
 # Anthropic
 export ANTHROPIC_API_KEY=sk-ant-xxx
-kubectl-ai analyze pod xxx --ai-provider anthropic --ai-model claude-sonnet-4-20250514
+kubectl-ai analyze pod xxx -n production --ai-provider anthropic --ai-model claude-sonnet-4-20250514
 ```
 
 ## 系统要求

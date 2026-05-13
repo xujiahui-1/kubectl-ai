@@ -22,7 +22,8 @@ var analyzeAllCmd = &cobra.Command{
 	Use:   "all",
 	Short: "Analyze all failing pods in the namespace",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		aiClient, err := ai.NewClient(aiProvider, aiModel, aiAPIKey)
+		provider, model, apiKey := resolveAIConfig()
+		aiClient, err := ai.NewClient(provider, model, apiKey)
 		if err != nil {
 			return fmt.Errorf("failed to create AI client: %w", err)
 		}
