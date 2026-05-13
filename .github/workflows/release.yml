@@ -10,19 +10,15 @@ permissions:
 
 jobs:
   build:
-    name: Build and Release
+    name: Build (${{ matrix.bin_name }})
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        arch: [amd64]
-        include:
-          - os: ubuntu-latest
-            arch: amd64
-            bin_name: kubectl-ai-linux-amd64
-          - os: macos-latest
-            arch: arm64
-            bin_name: kubectl-ai-darwin-arm64
-    runs-on: ${{ matrix.os }}
+        goos: [linux, darwin]
+        goarch: [amd64, arm64]
+        exclude:
+          - goos: linux
+            goarch: arm64
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -32,15 +28,15 @@ jobs:
 
       - name: Build
         run: |
-          GOOS=${{ matrix.os == 'ubuntu-latest' && 'linux' || 'darwin' }} \
-          GOARCH=${{ matrix.arch }} \
-          go build -o ${{ matrix.bin_name }} .
+          bin_name="kubectl-ai-${{ matrix.goos }}-${{ matrix.goarch }}"
+          echo "bin_name=$bin_name" >> $GITHUB_ENV
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o "$bin_name" .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.bin_name }}
-          path: ${{ matrix.bin_name }}
+          name: ${{ env.bin_name }}
+          path: ${{ env.bin_name }}
 
   release:
     name: Create Release
