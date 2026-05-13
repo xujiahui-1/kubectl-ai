@@ -6,14 +6,27 @@
 
 ## 快速开始
 
-```bash
-# 1. 设置 AI API Key
-export DEEPSEEK_API_KEY=sk-xxx
+选择一种 AI 提供商：
 
-# 2. 分析故障 Pod
+**选项 A — DeepSeek（默认）**
+```bash
+export DEEPSEEK_API_KEY=sk-xxx
+```
+
+**选项 B — Anthropic**
+```bash
+export ANTHROPIC_API_KEY=sk-ant-xxx
+```
+
+然后运行：
+```bash
+# 分析单个故障 Pod（默认用 DeepSeek）
 kubectl-ai analyze pod payment-api -n production
 
-# 3. 或批量扫描整个 namespace
+# 如果用 Anthropic
+kubectl-ai analyze pod payment-api -n production --ai-provider anthropic
+
+# 或批量扫描整个 namespace
 kubectl-ai analyze all -n production
 ```
 
@@ -21,7 +34,7 @@ kubectl-ai analyze all -n production
 
 ```bash
 # 下载二进制
-curl -LO https://github.com/xu/kubectl-ai/releases/latest/download/kubectl-ai-darwin-arm64
+curl -LO https://github.com/xujiahui-1/kubectl-ai/releases/latest/download/kubectl-ai-darwin-arm64
 chmod +x kubectl-ai-darwin-arm64
 sudo mv kubectl-ai-darwin-arm64 /usr/local/bin/kubectl-ai
 
