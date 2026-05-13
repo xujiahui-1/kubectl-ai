@@ -7,14 +7,27 @@ Quickly identify pod failure root causes: ImagePullBackOff, CrashLoopBackOff, OO
 
 ## Quick Start
 
-```bash
-# 1. Set your AI API key
-export DEEPSEEK_API_KEY=sk-xxx
+Choose your AI provider:
 
-# 2. Analyze a failing pod
+**Option A — DeepSeek（default）**
+```bash
+export DEEPSEEK_API_KEY=sk-xxx
+```
+
+**Option B — Anthropic**
+```bash
+export ANTHROPIC_API_KEY=sk-ant-xxx
+```
+
+Then run:
+```bash
+# Analyze a single failing pod (DeepSeek is default)
 kubectl-ai analyze pod payment-api -n production
 
-# 3. Or scan all failing pods in a namespace
+# If using Anthropic
+kubectl-ai analyze pod payment-api -n production --ai-provider anthropic
+
+# Or scan all failing pods in a namespace
 kubectl-ai analyze all -n production
 ```
 
