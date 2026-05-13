@@ -1,0 +1,22 @@
+# Binary
+kubectl-ai
+*.exe
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Dependencies
+vendor/
+
+# Build artifacts
+dist/
+release/
+
+# Claude AI (local only)
+.claude/
+CLAUDE.md
+SKILL.md
